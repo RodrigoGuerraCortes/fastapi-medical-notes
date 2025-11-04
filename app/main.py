@@ -1,9 +1,15 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy import text
 from sqlalchemy.orm import Session
-from .database import engine, get_db
+from app.database import engine, get_db, Base
+from .routers import patient_router
+
+# Create tables automatically (only for local dev)
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="FastAPI Medical Notes")
+
+app.include_router(patient_router.router)
 
 @app.get("/")
 def root():
